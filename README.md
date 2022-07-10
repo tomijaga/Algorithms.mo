@@ -2,7 +2,7 @@
 Software engineering algorithms implemented in Motoko for educational purposes.
 
 ## Importing Module 
-- importing all the algorithms at once:
+- importing all the algorithms:
 ```motoko
     import Algo "mo:Algorithms";
 ```
@@ -14,15 +14,15 @@ Software engineering algorithms implemented in Motoko for educational purposes.
     import Search "mo:Algorithms/Search";
 ```
 
-- importing algorithm sections:
+- importing specific algorithms:
 ```motoko
-    import mergeSort "mo:Algorithms/Sort/mergeSort";
-    import fibonacci "mo:Algorithms/DP/fibonacci";
-    import binarySearch "mo:Algorithms/Search/binarySearch";
+    import { mergeSort } "mo:Algorithms/Sort";
+    import { fibonacci } "mo:Algorithms/DP";
+    import { binarySearch } "mo:Algorithms/Search";
 ```
 
 ## Usage
-- Generating 3rd number in the Fibonacci sequence:
+- Generating the 3rd number in the Fibonacci sequence:
 ```motoko
 
     import Algo "mo:Algorithms";
@@ -46,7 +46,7 @@ Software engineering algorithms implemented in Motoko for educational purposes.
 - searching an array for a value
 ```motoko
     import Nat "mo:base/Nat";
-    import binarySearch "mo:Algorithms/Search/binarySearch";
+    import { binarySearch } "mo:Algorithms/Search/BinarySearch";
 
     let array = [1,2,3,4,5,6,7];
     

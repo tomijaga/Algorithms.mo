@@ -3,4 +3,4 @@ test:
 	$(shell vessel bin)/moc -r $(shell vessel sources) -wasi-system-api ./tests/*/*Test.mo
 
 doc: test
-	$(shell vessel bin)/mo-doc
+	$(shell vessel bin)/mo-doc ./src/*/lib.mo
