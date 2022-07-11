@@ -1,12 +1,9 @@
-Filename: `[Section]/[Function].Test.mo`
-
-```motoko
 import Debug "mo:base/Debug";
 import Iter "mo:base/Iter";
 
 import ActorSpec "../utils/ActorSpec";
 import Algo "../../src";
-// import [FnName] "../../src/[section]/[FnName]";
+import { rot13 } "../../src/Ciphers";
 
 let {
     assertTrue; assertFalse; assertAllTrue; 
@@ -14,10 +11,11 @@ let {
 } = ActorSpec;
 
 let success = run([
-    describe(" (Function Name) ", [
-        it("(test name)", do {
-            
-            // ...
+    describe("Rot13", [
+        it("letter case", do {
+            assertTrue(
+                Algo.Ciphers.rot13("Hello, World!") == "Uryyb, Jbeyq!"
+            )
         }),
     ])
 ]);
@@ -27,5 +25,3 @@ if(success == false){
 }else{
     Debug.print("\1b[23;42;3m Success!\1b[0m");
 };
-
-```

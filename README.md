@@ -53,3 +53,6 @@ Software engineering algorithms implemented in Motoko for educational purposes.
     assert binarySearch(array, 5, Nat.compare) == #ok(4);
     
 ```
+
+## Live Coding Environment
+[Motoko Playground](https://m7sm4-2iaaa-aaaab-qabra-cai.raw.ic0.app/?tag=3117150752)

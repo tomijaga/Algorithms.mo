@@ -19,12 +19,6 @@ let success = run([
         it("fib of 10", do {
             assertTrue( fibonacci(10) == 55 )
         }),
-        it("fib of 20", do {
-            assertTrue( fibonacci(20) == 6765 )
-        }),
-        it("fib of 30", do {
-            assertTrue( fibonacci(30) == 832040 )
-        }),
         it("fib of 40", do {
             assertTrue( fibonacci(40) == 102334155 )
         }),

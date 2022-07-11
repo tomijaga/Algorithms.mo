@@ -1,5 +1,6 @@
 import Order "mo:base/Order";
 import Result "mo:base/Result";
+import Int "mo:base/Int";
 
 module{
     public func binarySearch<A>(sortedArray: [A], value: A,  cmp: (A, A)-> Order.Order) : Result.Result<Nat, Nat>{
@@ -9,7 +10,7 @@ module{
         };
         
         var low = 0;
-        var high = sortedArray.size() - 1;
+        var high = Int.abs(sortedArray.size() - 1);
 
         while (low <= high) {
             var mid = (low + high) / 2;
