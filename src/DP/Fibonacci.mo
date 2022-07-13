@@ -3,7 +3,7 @@ import Array "mo:base/Array";
 import Iter "mo:base/Iter";
 
 module {
-    public func fibonacci(n: Nat) : Nat{
+    public func fibonacci(n: Nat) : Nat {
         var fib = Array.init<Nat>(n + 1, 0);
 
         fib[0] := 0;
