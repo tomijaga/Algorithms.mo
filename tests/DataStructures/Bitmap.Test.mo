@@ -2,7 +2,7 @@ import Debug "mo:base/Debug";
 import Iter "mo:base/Iter";
 
 import ActorSpec "../utils/ActorSpec";
-import Bitmap "../../src/DataStructures/Class/Bitmap";
+import Bitmap "../../src/DataStructures/Bitmap";
 
 let {
     assertTrue; assertFalse; assertAllTrue; 
@@ -38,14 +38,14 @@ let success = run([
             ])
         }),
 
-        it("clear_all", do{
+        it("clearAll", do{
             let bitmap = Bitmap.Bitmap(7);  
 
             bitmap.set(2);
             bitmap.set(4);
             bitmap.set(6);
 
-            bitmap.clear_all();
+            bitmap.clearAll();
 
             bitmap.set(0);
             bitmap.set(7);

@@ -17,12 +17,12 @@ module Bitmap{
             n / MASK
         };
 
-        func to_nat64(n : Nat) : Nat64{
+        func mask_bit(n : Nat) : Nat64{
             Nat64.fromNat(n % MASK)
         };
 
         func to_bit_pos(n : Nat) : Nat64{
-            1 << to_nat64(n)
+            1 << mask_bit(n)
         };
 
         let _size: Nat = to_index(_max) + 1;
@@ -41,7 +41,7 @@ module Bitmap{
         };
 
         public func get(n: Nat) : Bool {
-            (bits[to_index(n)] & to_bit_pos(n)) >> to_nat64(n) == 1
+            (bits[to_index(n)] & to_bit_pos(n)) >> mask_bit(n) == 1
         };
 
         public func count() : Nat {
@@ -55,7 +55,7 @@ module Bitmap{
             set_bits
         };
 
-        public func clear_all(){
+        public func clearAll(){
             for (i in Iter.range(0, Int.abs(_size - 1))){
                 bits[i] := 0;
             };
@@ -91,6 +91,14 @@ module Bitmap{
         };
     };
 
+    func sortBySize( a: Bitmap, b: Bitmap ) : (Bitmap, Bitmap){
+        if ( a.size() < b.size()) {
+            (a, b)
+        }else{
+            (b, a)
+        }
+    };
+
     public func bitand( a: Bitmap, b: Bitmap ) : Bitmap {
         let bits_a = a.__bits();
         let bits_b = b.__bits();
@@ -111,54 +119,48 @@ module Bitmap{
     };
 
     public func bitor( _a : Bitmap, _b : Bitmap ) : Bitmap {
-        let (a, b) = if (_a.size() > _b.size()){
-            (_a, _b)
-        }else{
-            (_b, _a)
-        };
+        let (a, b) = sortBySize(_a, _b);
 
         let bits_a = a.__bits();
         let bits_b = b.__bits();
 
         let c = Bitmap(
-            Nat.max(a.max(), b.max())
+            Nat.max(a.max(), a.max())
         );
 
         let bits_c = c.__bits();
 
-        for (i in Iter.range(0, Int.abs(b.size() - 1))){
+        for (i in Iter.range(0, Int.abs(a.size() - 1))){
             bits_c[i] := bits_a[i] | bits_b[i];
         };
 
-        for (i in Iter.range(b.size(), Int.abs(a.size() - 1))){
-            bits_c[i] := bits_a[i];
+        for (i in Iter.range(a.size(), Int.abs(b.size() - 1))){
+            bits_c[i] := bits_b[i];
         };
 
         c
     };
 
-    public func bitxor( _a : Bitmap, _b : Bitmap ) : Bitmap{
-        let (a, b) = if (_a.size() > _b.size()){
-            (_a, _b)
-        }else{
-            (_b, _a)
-        };
+    public func bitxor( _a : Bitmap, _b : Bitmap ) : Bitmap {
+        let (a, b) = sortBySize(_a, _b);
 
         let bits_a = a.__bits();
         let bits_b = b.__bits();
 
         let c = Bitmap(
-            Nat.max(a.max(), b.max())
+            Nat.max(a.max(), a.max())
         );
 
         let bits_c = c.__bits();
 
-        for (i in Iter.range(0, Int.abs(b.size() - 1))){
+        for (i in Iter.range(0, Int.abs(a.size() - 1))){
             bits_c[i] := bits_a[i] ^ bits_b[i];
         };
 
-        for (i in Iter.range(b.size(), Int.abs(a.size() - 1))){
-            bits_c[i] := bits_a[i] ^ 0;
+        for (i in Iter.range(a.size(), Int.abs(b.size() - 1))){
+            bits_c[i] := bits_b[i] ^ 0;
         };
+
+        c
     };
 };
