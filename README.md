@@ -1,25 +1,6 @@
 # Algorithms.mo
 Software engineering algorithms implemented in Motoko for educational purposes.
-
-## Importing Module 
-- importing all the algorithms:
-```motoko
-    import Algo "mo:Algorithms";
-```
-
-- importing algorithm sections:
-```motoko
-    import Sort "mo:Algorithms/Sort";
-    import DP "mo:Algorithms/DP";
-    import Search "mo:Algorithms/Search";
-```
-
-- importing specific algorithms:
-```motoko
-    import { mergeSort } "mo:Algorithms/Sort";
-    import { fibonacci } "mo:Algorithms/DP";
-    import { binarySearch } "mo:Algorithms/Search";
-```
+View the full list of implemented algorithms and data structures [here](algorithms.md)
 
 ## Usage
 - Generating the 3rd number in the Fibonacci sequence:
