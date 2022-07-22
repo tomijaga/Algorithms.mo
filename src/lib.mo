@@ -3,6 +3,7 @@ import DynamicProgramming "DP";
 import SearchingAlgorithms "Search";
 import SortingAlgorithms "Sort";
 import MathAlgorithms "Math";
+import TextProcessing "Text";
 
 module Algorithms{
   public let Search = SearchingAlgorithms;
@@ -10,4 +11,5 @@ module Algorithms{
   public let Ciphers = CipherAlgorithms;
   public let Sort = SortingAlgorithms;
   public let Math = MathAlgorithms;
+  public let Text = TextProcessing;
 };
