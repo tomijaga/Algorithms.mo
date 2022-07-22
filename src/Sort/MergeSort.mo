@@ -25,8 +25,10 @@ module{
         };
         
         if (diff == 2){
-            if (cmp(arr[start], arr[end -1]) == #greater){
-                swap(arr, start, end - 1);
+            let last_index = Int.abs(end - 1);
+
+            if (cmp(arr[start], arr[last_index]) == #greater){
+                swap(arr, start, last_index);
             };
             return ;
         };

@@ -1,9 +1,9 @@
 import Debug "mo:base/Debug";
 import Iter "mo:base/Iter";
-import Array "mo:base/Array";
 
 import ActorSpec "../utils/ActorSpec";
 import Algo "../../src";
+// import [FnName] "../../src/[section]/[FnName]";
 
 let {
     assertTrue; assertFalse; assertAllTrue; 
@@ -11,14 +11,10 @@ let {
 } = ActorSpec;
 
 let success = run([
-    describe(" Shell Sort ", [
-        it("test 1", do {
-            let arr = [var 3,2,4,1,5];
-
-            Algo.Sort.shellSortMut(arr, Nat.compare);
-            Debug.print(debug_show Array.freeze(arr));
-            // assertTrue(Array.freeze(arr) == [1, 2, 3, 4]);
-            true
+    describe("Caeser", [
+        it("caeser", do {
+            
+            assertTrue(Algo.Ciphers.caeser("A", 1) == "B");
         }),
     ])
 ]);
