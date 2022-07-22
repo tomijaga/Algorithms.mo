@@ -36,4 +36,4 @@ View the full list of implemented algorithms and data structures [here](algorith
 ```
 
 ## Live Coding Environment
-[Motoko Playground](https://m7sm4-2iaaa-aaaab-qabra-cai.raw.ic0.app/?tag=3117150752)
+[Motoko Playground](https://m7sm4-2iaaa-aaaab-qabra-cai.raw.ic0.app/?tag=3147301614)
