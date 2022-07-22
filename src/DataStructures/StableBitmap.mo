@@ -5,7 +5,7 @@ import Iter "mo:base/Iter";
 import Int "mo:base/Int";
 import Debug "mo:base/Debug";
 
-module StableBitmap{
+module StableBitmap {
 
     public type StableBitmap = ([var Nat64], Nat);
 
@@ -95,6 +95,59 @@ module StableBitmap{
 
         for (i in Iter.range(0, Int.abs(size(a) - 1))){
             new_bitmap.0[i] := a.0[i] & b.0[i]; 
+        };
+
+        new_bitmap
+    };
+
+    public func bitor (a: StableBitmap, b: StableBitmap) : StableBitmap {
+        let (small, big) = sortBySize(a, b);
+
+        let new_bitmap = new(
+            Nat.max( max(a), max(b) )
+        );
+
+        for (i in Iter.range(0, Int.abs(size(small) - 1))){
+            new_bitmap.0[i] := small.0[i] | big.0[i]; 
+        };
+
+        for (i in Iter.range(size(small), Int.abs(size(big) - 1))){
+            new_bitmap.0[i] := big.0[i];
+        };
+
+        new_bitmap
+    };
+
+    public func bitxor (a: StableBitmap, b: StableBitmap) : StableBitmap {
+        let (small, big) = sortBySize(a, b);
+
+        let new_bitmap = new(
+            Nat.max( max(a), max(b) )
+        );
+
+        for (i in Iter.range(0, Int.abs(size(small) - 1))){
+            new_bitmap.0[i] := small.0[i] ^ big.0[i]; 
+        };
+
+        for (i in Iter.range(size(small), Int.abs(size(big) - 1))){
+            new_bitmap.0[i] := big.0[i] ^ 0;
+        };
+
+        new_bitmap
+    };
+
+    /// Returns a `StableBitmap` with all the elements in `a` that are not in `b`.
+    public func difference(a: StableBitmap, b: StableBitmap) : StableBitmap{
+        let new_bitmap = new(
+            Nat.min(max(a), max(b))
+        );
+
+        if (size(b) > size(a)){
+            return new_bitmap;
+        };
+
+        for (i in Iter.range(0, Int.abs(size(b) - 1))){
+            new_bitmap.0[i] := a.0[i] - b.0[i];
         };
 
         new_bitmap
