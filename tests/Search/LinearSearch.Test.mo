@@ -4,7 +4,6 @@ import Nat "mo:base/Nat";
 
 import ActorSpec "../utils/ActorSpec";
 import Algo "../../src";
-// import [FnName] "../../src/[section]/[FnName]";
 
 let {
     assertTrue; assertFalse; assertAllTrue; 
