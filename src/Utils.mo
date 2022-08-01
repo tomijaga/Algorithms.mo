@@ -22,4 +22,21 @@ module{
             };
         };
     };
+
+    public func reduce<A>(iter: Iter.Iter<A>, f: (A, A) -> A): ?A{
+        switch (iter.next()){
+            case (?a) {
+                var acc = a;
+
+                for (val in iter){
+                    acc := f(acc, val);
+                };
+
+                ?acc
+            };
+            case (_) {
+                return null;
+            };
+        }
+    };
 };

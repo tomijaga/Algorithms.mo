@@ -5,6 +5,9 @@ import Iter "mo:base/Iter";
 import Int "mo:base/Int";
 import Debug "mo:base/Debug";
 
+import Utils "../Utils";
+
+
 module StableBitmap {
 
     public type StableBitmap = ([var Nat64], Nat);
@@ -151,5 +154,17 @@ module StableBitmap {
         };
 
         new_bitmap
+    };
+
+    public func isDisjoint(a: StableBitmap, b: StableBitmap) : Bool{
+        let min_size = Nat.min(size(a), size(b));
+
+        for (i in Utils.range(0, min_size)){
+            if ((a.0[i] & b.0[i]) != 0) {
+                return false;
+            }
+        };
+
+        true
     };
 };

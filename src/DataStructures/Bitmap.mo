@@ -4,6 +4,8 @@ import Nat "mo:base/Nat";
 import Int "mo:base/Int";
 import Iter "mo:base/Iter";
 
+import Utils "../Utils";
+
 /// A Bitmap that stores numbers from 0 to the given max
 
 module Bitmap{
@@ -11,7 +13,6 @@ module Bitmap{
     public let MASK = 64; // 2 ** 6;
 
     public class Bitmap(_max : Nat){
-        assert _max > 0;
 
         func to_index(n: Nat) : Nat{
             n / MASK
@@ -47,7 +48,7 @@ module Bitmap{
         public func count() : Nat {
             var set_bits = 0;
 
-            for (i in Iter.range(0, Int.abs(_size - 1))){
+            for (i in Utils.range(0, _size)){
                 let cnt = Nat64.bitcountNonZero(bits[i]);
                 set_bits += Nat64.toNat(cnt);
             };
@@ -56,12 +57,12 @@ module Bitmap{
         };
 
         public func clearAll(){
-            for (i in Iter.range(0, Int.abs(_size - 1))){
+            for (i in Utils.range(0, _size)){
                 bits[i] := 0;
             };
         };
 
-        public func __bits(): [var Nat64]{
+        public func _getBits(): [var Nat64]{
             bits
         };
 
@@ -75,16 +76,16 @@ module Bitmap{
 
         public func bitandInPlace(other : Bitmap) {
             let self_bits = bits;
-            let other_bits = other.__bits();
+            let other_bits = other._getBits();
 
             let min_size = Nat.min(_size, other.size());
 
-            for (i in Iter.range(0, Int.abs(min_size - 1))){
+            for (i in Utils.range(0, min_size)){
                 self_bits[i] &= other_bits[i];
             };
 
             if (_size > min_size){
-                for (i in Iter.range(min_size, Int.abs(_size - 1))){
+                for (i in Utils.range(min_size, _size)){
                     self_bits[i] := 0;
                 };
             };
@@ -100,18 +101,18 @@ module Bitmap{
     };
 
     public func bitand( a: Bitmap, b: Bitmap ) : Bitmap {
-        let bits_a = a.__bits();
-        let bits_b = b.__bits();
+        let bits_a = a._getBits();
+        let bits_b = b._getBits();
 
         let c = Bitmap(
             Nat.max(a.max(), b.max())
         );
 
-        let bits_c = c.__bits();
+        let bits_c = c._getBits();
 
         let min_size = Nat.min(a.size(), b.size());
 
-        for (i in Iter.range(0, Int.abs(min_size - 1))){
+        for (i in Utils.range(0, min_size)){
             bits_c[i] := bits_a[i] & bits_b[i];
         };
 
@@ -121,20 +122,20 @@ module Bitmap{
     public func bitor( _a : Bitmap, _b : Bitmap ) : Bitmap {
         let (a, b) = sortBySize(_a, _b);
 
-        let bits_a = a.__bits();
-        let bits_b = b.__bits();
+        let bits_a = a._getBits();
+        let bits_b = b._getBits();
 
         let c = Bitmap(
             Nat.max(a.max(), a.max())
         );
 
-        let bits_c = c.__bits();
+        let bits_c = c._getBits();
 
-        for (i in Iter.range(0, Int.abs(a.size() - 1))){
+        for (i in Utils.range(0, a.size())){
             bits_c[i] := bits_a[i] | bits_b[i];
         };
 
-        for (i in Iter.range(a.size(), Int.abs(b.size() - 1))){
+        for (i in Utils.range(a.size(), b.size())){
             bits_c[i] := bits_b[i];
         };
 
@@ -144,23 +145,38 @@ module Bitmap{
     public func bitxor( _a : Bitmap, _b : Bitmap ) : Bitmap {
         let (a, b) = sortBySize(_a, _b);
 
-        let bits_a = a.__bits();
-        let bits_b = b.__bits();
+        let bits_a = a._getBits();
+        let bits_b = b._getBits();
 
         let c = Bitmap(
             Nat.max(a.max(), a.max())
         );
 
-        let bits_c = c.__bits();
+        let bits_c = c._getBits();
 
-        for (i in Iter.range(0, Int.abs(a.size() - 1))){
+        for (i in Utils.range(0, a.size())){
             bits_c[i] := bits_a[i] ^ bits_b[i];
         };
 
-        for (i in Iter.range(a.size(), Int.abs(b.size() - 1))){
+        for (i in Utils.range(a.size(), b.size())){
             bits_c[i] := bits_b[i] ^ 0;
         };
 
         c
+    };
+
+    public func isDisjoint(a: Bitmap, b: Bitmap) : Bool{
+        let bits_a = a._getBits();
+        let bits_b = b._getBits();
+
+        let min_size = Nat.min(a.size(), b.size());
+
+        for (i in Utils.range(0, min_size)){
+            if ((bits_a[i] & bits_b[i]) != 0) {
+                return false;
+            }
+        };
+
+        true
     };
 };
