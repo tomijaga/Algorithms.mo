@@ -5,10 +5,6 @@ let vessel_package_set =
 let Package =
     { name : Text, version : Text, repo : Text, dependencies : List Text }
 
-let
-  -- This is where you can add your own packages to the package-set
-  additions =
-    [] : List Package
+let additions = [] : List Package
 
-
-in  aviate_labs # vessel_package_set
+in  aviate_labs # vessel_package_set # additions

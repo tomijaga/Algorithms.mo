@@ -7,7 +7,6 @@ import Debug "mo:base/Debug";
 
 import Utils "../Utils";
 
-
 module StableBitmap {
 
     public type StableBitmap = ([var Nat64], Nat);

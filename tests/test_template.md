@@ -3,6 +3,7 @@ Filename: `[Section]/[Function].Test.mo`
 ```motoko
 import Debug "mo:base/Debug";
 import Nat "mo:base/Nat";
+import Iter "mo:base/Nat";
 
 import ActorSpec "../utils/ActorSpec";
 import Algo "../../src";

@@ -18,7 +18,7 @@ module{
                 Utils.array_swap<Nat>(arr, i, j);
             };
 
-            Debug.print(debug_show Array.freeze(arr) # " " # debug_show gap);
+            // Debug.print(debug_show Array.freeze(arr) # " " # debug_show gap);
 
             i+=1;
             j+=1;
