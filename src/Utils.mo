@@ -1,6 +1,9 @@
 import Int "mo:base/Int";
 import Iter "mo:base/Iter";
 import List "mo:base/List";
+import Set "mo:base/TrieSet";
+import Trie "mo:base/Trie";
+import Hash "mo:base/Hash";
 
 module{
     public module IterModule{
@@ -66,6 +69,51 @@ module{
                     case _ null
                 }
             }
+        }
+    };
+
+    public module SetModule{
+        public func remove<A>(
+            set : Set.Set<A>, 
+            item : A, 
+            hash : Hash.Hash,
+            isEq: (A, A) -> Bool, 
+        ) : (Set.Set<A>, Bool) {
+            let keyObj = { key = item; hash};
+
+            let (updatedSet, prevVal) =  Trie.remove<A, ()>(set, keyObj, isEq);
+
+            let res = switch(prevVal){
+                case (?_) true;
+                case (null) false;
+            };
+
+            (updatedSet, res)
+        };
+
+        public func add<A>(
+            set : Set.Set<A>,
+            item : A,
+            hash : Hash.Hash,
+            isEq: (A, A) -> Bool,
+        ) : (Set.Set<A>, Bool) {
+            let keyObj = { key = item; hash};
+            let (updatedSet, prevVal) =  Trie.replace<A, ()>(set, keyObj, isEq, ?());
+
+            let res = switch(prevVal){
+                case (?_) false;
+                case (null) true;
+            };
+
+            (updatedSet, res)
+        };
+
+        public func toIter<A>(set : Set.Set<A>) : Iter.Iter<A> {
+            let iter = Trie.iter<A, ()>(set);
+
+            Iter.map(iter, func((key, _): (A, ())): A{
+                key
+            })
         }
     };
 

@@ -7,7 +7,7 @@ import Stack "mo:base/Stack";
 import List "mo:base/List";
 import Debug "mo:base/Debug";
 
-import { IterModule; ListModule } "../Utils";
+import { IterModule; ListModule; SetModule } "../Utils";
 
 module{
 
@@ -50,7 +50,7 @@ module{
 
         /// Removes a node from the graph and returns all the edges that were removed.
         public func removeNode(nodeToRemove: A) : ?Iter.Iter<(A, A)> {
-            let edgesIter = switch(map.remove(nodeToRemove)){
+            let outgoingEdges = switch(map.remove(nodeToRemove)){
                 case(null) return null;
                 case (?_set) {
                     Iter.map<(A, ()), (A, A)>(
@@ -66,27 +66,18 @@ module{
                 case (#directed){
                     var list = List.nil<(A, A)>();
 
-                    let isEqCallback = func(node: A): (A, A) -> Bool{
-                        func(a: A, b: A): Bool{
-                            if (isEq(a, b)){
-                                list := List.push((node, a), list); 
-                                true
-                            } else {
-                                false
-                            };
-                        }
-                    };
-                    
                     for ((node, set) in map.entries()){
-                        map.put(
-                            node, 
-                            Set.delete(set, nodeToRemove, hashFn(nodeToRemove), isEqCallback(node))
-                        );
+                        let (updatedSet, wasRemoved) = SetModule.remove<A>(set, nodeToRemove, hashFn(nodeToRemove), isEq);
+                        
+                        if (wasRemoved){
+                            map.put(node, updatedSet);
+                            list := List.push((node, nodeToRemove), list);
+                        };
                     };
 
                     ?IterModule.chain<(A, A)>(
                         ListModule.toIter(list),
-                        edgesIter
+                        outgoingEdges
                     )
                 };
 
@@ -98,7 +89,7 @@ module{
                         );
                     };
 
-                    ?edgesIter
+                    ?outgoingEdges
                 };
             };
         };
@@ -110,56 +101,75 @@ module{
             }
         };
 
-        func addDirectedEdge(nodeA: A, nodeB: A ){
-            let setA = switch(map.get(nodeA)){
+        func addDirectedEdge(nodeA: A, nodeB: A ) : Bool{
+            let (setA, added) = switch(map.get(nodeA)){
                 case(?set){
-                    Set.put(set, nodeB, hashFn(nodeB), isEq);
+                    SetModule.add(set, nodeB, hashFn(nodeB), isEq);
                 };
                 case(_) {
                     var set = Set.empty<A>();
-                    Set.put(set, nodeB, hashFn(nodeB), isEq);
+                    SetModule.add(set, nodeB, hashFn(nodeB), isEq);
                 };
             };
 
-            map.put(nodeA, setA);
+            if (added){
+                map.put(nodeA, setA);
+                return true;
+            };
+
+            false
         };
 
         public func addEdge(nodeA: A, nodeB: A ){
-            switch(graphType){
+            let added = switch(graphType){
                 case (#directed){
                     // add nodeB to map if it doesn't exist
                     addNode(nodeB);
-                    addDirectedEdge(nodeA, nodeB);
+                    addDirectedEdge(nodeA, nodeB)
                 };
                 case (#undirected){
-                    addDirectedEdge(nodeA, nodeB);
+                    addDirectedEdge(nodeA, nodeB) and 
                     addDirectedEdge(nodeB, nodeA);
                 };
             };
-            _edgeSize+=1;
+
+            if (added){
+                _edgeSize+=1;
+            };
+
         };
 
-        func removeDirectedEdge(nodeA: A, nodeB: A){
+        func removeDirectedEdge(nodeA: A, nodeB: A): Bool{
             switch(map.get(nodeA)){
                 case(?set){
-                    let setA = Set.delete(set, nodeB, hashFn(nodeB), isEq);
-                    map.put(nodeA, setA);
+                    let (updatedSet, removed) = SetModule.remove(set, nodeB, hashFn(nodeB), isEq);
+
+                    if (removed){
+                        map.put(nodeA, updatedSet);
+                        return true;
+                    };
+
+                    false
                 }; 
-                case(_) {};
+                case(_) false;
             };
         };
 
         public func removeEdge(nodeA: A, nodeB: A){
-            switch(graphType){
+            let removed = switch(graphType){
                 case (#directed){
                     removeDirectedEdge(nodeA, nodeB);
                 };
                 case (#undirected){
-                    removeDirectedEdge(nodeA, nodeB);
+                    removeDirectedEdge(nodeA, nodeB) and
                     removeDirectedEdge(nodeB, nodeA);
                 };
             };
-            _edgeSize-=1;
+
+            if (removed){
+                _edgeSize-=1;
+            };
+
         };
 
         public func hasEdge(nodeA: A, nodeB : A) : Bool{
@@ -174,12 +184,7 @@ module{
         public func neighbors(node: A) : Iter.Iter<A>{
             switch(map.get(node)){
                 case(?set){
-                    Iter.map(
-                        Trie.iter<A, ()>(set), 
-                        func((node, _) : (A, ())): A{
-                            node
-                        }
-                    )
+                    SetModule.toIter(set)
                 };
                 case(_) IterModule.empty<A>();
             };
@@ -216,7 +221,7 @@ module{
                     Iter.filter(
                         flattened,
                         func((nodeA, nodeB) : (A, A)) : Bool{
-                            if(Set.mem(visited, nodeA, hashFn(nodeA), isEq)){
+                            if(Set.mem(visited, nodeB, hashFn(nodeB), isEq)){
                                 false
                             }else{
                                 visited := Set.put(visited, nodeA, hashFn(nodeA), isEq);

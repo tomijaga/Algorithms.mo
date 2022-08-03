@@ -13,12 +13,27 @@ let {
 
 let success = run([
     describe("StableGraph", [
-        it("Directed Graph", do {
+        describe("Directed Graph", [
+            it("new", do {
             
-            let graph = StableGraph.newDirectedGraph<Nat>(Nat.equal, Hash.hash);
+                let graph = StableGraph.DirectedGraph<Nat>(Nat.equal, Hash.hash);
 
-            assertTrue( StableGraph.isEmpty(graph) == true )
-        }),
+                assertTrue( StableGraph.isEmpty(graph) == true )
+            }),
+            it("add node to Graph", do{
+                let graph = StableGraph.DirectedGraph<Nat>(Nat.equal, Hash.hash);
+
+                StableGraph.addNode(graph, 1);
+                StableGraph.addNode(graph, 2);
+
+                assertAllTrue([
+                    StableGraph.hasNode(graph, 1),
+                    StableGraph.hasNode(graph, 2),
+                    not StableGraph.hasNode(graph, 3),
+                    StableGraph.nodeSize(graph) == 2
+                ])
+            }),
+        ]),
     ])
 ]);
 

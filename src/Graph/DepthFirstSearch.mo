@@ -2,6 +2,8 @@ import Iter "mo:base/Iter";
 
 import Graph "../DataStructures/Graph";
 
+import {SetModule} "../Utils";
+
 module{
     public func depthFirstSearch<A>(graph: Graph<A>, start: A) : Iter.Iter<A> {
         var visited = Set.empty<A>();
@@ -20,7 +22,7 @@ module{
                                     val := node;
                                     visited := Set.put(visited, node, hashFn(node), isEq);
                                     
-                                    for ((_node, _) in Trie.iter<(A, ())>(set)){
+                                    for (_node in SetModule.toIter(set)){
                                         if (not Set.mem(visited, node, hashFn(node), isEq)){
                                             stack.push(_node);
                                         };
